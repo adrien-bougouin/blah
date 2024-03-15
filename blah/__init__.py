@@ -1,7 +1,8 @@
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = [
     "analyze",
     "Audio",
+    "load",
     "mir",
     "train"
 ]
@@ -15,6 +16,28 @@ from . import mir
 from .audio import Audio
 from .typing._common import Filepath
 from .typing.mir import WordClass
+
+
+def _dump(
+    classifier: mir.WordClassifier,
+    output_filepath: Filepath
+) -> None:
+    # pylint: disable=protected-access
+    with open(output_filepath, "wb") as output_file:
+        pickle.dump(
+            [
+                classifier._sample_rate,
+                classifier._svm,
+                classifier._embedding_dimensions
+            ],
+            output_file
+        )
+
+
+def load(model_filepath: Filepath) -> mir.WordClassifier:
+    with open(model_filepath, "rb") as model_file:
+        classifier = mir.WordClassifier(*pickle.load(model_file))
+    return classifier
 
 
 def train(config_filepath: Filepath, model_output_filepath: Filepath) -> None:
@@ -36,12 +59,8 @@ def train(config_filepath: Filepath, model_output_filepath: Filepath) -> None:
 
     classifier.train(training_samples, training_classes)
 
-    with open(model_output_filepath, "wb") as model_output_file:
-        pickle.dump(classifier, model_output_file)
+    _dump(classifier, model_output_filepath)
 
 
 def analyze(audio: Audio, model_filepath: Filepath) -> WordClass:
-    with open(model_filepath, "rb") as model_file:
-        classifier = pickle.load(model_file)
-
-    return classifier.classify(audio)
+    return load(model_filepath).classify(audio)

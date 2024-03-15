@@ -13,9 +13,9 @@ from . import speech
 class WordClassifier:
     def __init__(
         self,
+        sample_rate: AudioSampleRate = 22050,
         svm: Optional[sklearn.svm.LinearSVC] = None,
         embedding_dimensions: Optional[list[SpeechFeatures]] = None,
-        sample_rate: AudioSampleRate = 22050,
     ) -> None:
         self._sample_rate = sample_rate
         self._svm = svm or sklearn.svm.LinearSVC(dual=True, max_iter=100000)
