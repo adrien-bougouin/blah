@@ -1,0 +1,47 @@
+[[audio_samples]]
+class = "papa"
+directory = "./samples"
+samples = [
+  "papa_001.wav",
+  "papa_002.wav",
+  "papa_003.wav",
+  "papa_004.wav",
+  "papa_005.wav",
+  "papa_006.wav",
+  "papa_007.wav",
+  "papa_008.wav",
+  "papa_009.wav",
+  "papa_010.wav"
+]
+
+[[audio_samples]]
+class = "maman"
+directory = "./samples"
+samples = [
+  "maman_001.wav",
+  "maman_002.wav",
+  "maman_003.wav",
+  "maman_004.wav",
+  "maman_005.wav",
+  "maman_006.wav",
+  "maman_007.wav",
+  "maman_008.wav",
+  "maman_009.wav",
+  "maman_010.wav"
+]
+
+[[audio_samples]]
+class = "taxi"
+directory = "./samples"
+samples = [
+  "taxi_001.wav",
+  "taxi_002.wav",
+  "taxi_003.wav",
+  "taxi_004.wav",
+  "taxi_005.wav",
+  "taxi_006.wav",
+  "taxi_007.wav",
+  "taxi_008.wav",
+  "taxi_009.wav",
+  "taxi_010.wav"
+]

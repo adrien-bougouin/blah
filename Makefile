@@ -74,6 +74,18 @@ endif
 	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
 .PHONY: find-%
 
+## Run examples.
+examples:
+	$(eval temp_directory := $(shell mktemp -d))
+	$(eval temp_model := $(temp_directory)/mode.bin)
+	@echo "== Training =========================================================="
+	pipenv -q run train --config examples/train/config.toml $(temp_model)
+	@echo "== Analysis =========================================================="
+	pipenv -q run analyze --model $(temp_model) examples/analyze/papa_000.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/maman_000.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/taxi_000.wav
+.PHONY: examples
+
 ## Show this help.
 help:
 	@echo "Usage: make [<target>]"

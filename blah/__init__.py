@@ -1,4 +1,4 @@
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __all__ = [
     "analyze",
     "Audio",
@@ -41,18 +41,26 @@ def load(model_filepath: Filepath) -> mir.WordClassifier:
 
 
 def train(config_filepath: Filepath, model_output_filepath: Filepath) -> None:
+    classifier = mir.WordClassifier()
+    base_directory = os.path.dirname(config_filepath)
+
     with open(config_filepath, "r", encoding="utf-8") as config_file:
         config = toml.loads(config_file.read())
 
-    training_directory = config["directory"]
-
-    classifier = mir.WordClassifier()
     training_samples = []
     training_classes = []
 
-    for word in config["words"]:
-        for sample_filename in config[word]["samples"]:
-            sample_filepath = os.path.join(training_directory, sample_filename)
+    for audio_samples in config["audio_samples"]:
+        word = audio_samples["class"]
+        directory = os.path.normpath(
+            os.path.join(
+                base_directory,
+                os.path.expanduser(audio_samples["directory"])
+            )
+        )
+
+        for sample_filename in audio_samples["samples"]:
+            sample_filepath = os.path.join(directory, sample_filename)
 
             training_samples.append(Audio.from_file(sample_filepath))
             training_classes.append(word)
