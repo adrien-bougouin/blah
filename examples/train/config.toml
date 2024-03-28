@@ -1,47 +1,136 @@
 [[audio_samples]]
-class = "papa"
-directory = "./samples"
+class = "python"
+directory = "samples"
 samples = [
-  "papa_001.wav",
-  "papa_002.wav",
-  "papa_003.wav",
-  "papa_004.wav",
-  "papa_005.wav",
-  "papa_006.wav",
-  "papa_007.wav",
-  "papa_008.wav",
-  "papa_009.wav",
-  "papa_010.wav"
+  "python_albert.wav",
+  "python_bad.wav",
+  "python_bahh.wav",
+  "python_bells.wav",
+  "python_boing.wav",
+  "python_bubbles.wav",
+  "python_cellos.wav",
+  "python_wobble.wav",
+  "python_eddy.wav",
+  "python_flo.wav",
+  "python_fred.wav",
+  "python_good.wav",
+  "python_grandma.wav",
+  "python_grandpa.wav",
+  "python_jester.wav",
+  "python_junior.wav",
+  "python_kathy.wav",
+  "python_organ.wav",
+  "python_superstar.wav",
+  "python_ralph.wav",
+  "python_reed.wav",
+  "python_rocko.wav",
+  "python_samantha.wav",
+  "python_sandy.wav",
+  "python_shelley.wav",
+  "python_trinoids.wav",
+  "python_whisper.wav",
+  "python_zarvox.wav",
 ]
 
 [[audio_samples]]
-class = "maman"
-directory = "./samples"
+class = "library"
+directory = "samples"
 samples = [
-  "maman_001.wav",
-  "maman_002.wav",
-  "maman_003.wav",
-  "maman_004.wav",
-  "maman_005.wav",
-  "maman_006.wav",
-  "maman_007.wav",
-  "maman_008.wav",
-  "maman_009.wav",
-  "maman_010.wav"
+  "library_albert.wav",
+  "library_bad.wav",
+  "library_bahh.wav",
+  "library_bells.wav",
+  "library_boing.wav",
+  "library_bubbles.wav",
+  "library_cellos.wav",
+  "library_wobble.wav",
+  "library_eddy.wav",
+  "library_flo.wav",
+  "library_fred.wav",
+  "library_good.wav",
+  "library_grandma.wav",
+  "library_grandpa.wav",
+  "library_jester.wav",
+  "library_junior.wav",
+  "library_kathy.wav",
+  "library_organ.wav",
+  "library_superstar.wav",
+  "library_ralph.wav",
+  "library_reed.wav",
+  "library_rocko.wav",
+  "library_samantha.wav",
+  "library_sandy.wav",
+  "library_shelley.wav",
+  "library_trinoids.wav",
+  "library_whisper.wav",
+  "library_zarvox.wav",
 ]
 
 [[audio_samples]]
-class = "taxi"
-directory = "./samples"
+class = "test"
+directory = "samples"
 samples = [
-  "taxi_001.wav",
-  "taxi_002.wav",
-  "taxi_003.wav",
-  "taxi_004.wav",
-  "taxi_005.wav",
-  "taxi_006.wav",
-  "taxi_007.wav",
-  "taxi_008.wav",
-  "taxi_009.wav",
-  "taxi_010.wav"
+  "test_albert.wav",
+  "test_bad.wav",
+  "test_bahh.wav",
+  "test_bells.wav",
+  "test_boing.wav",
+  "test_bubbles.wav",
+  "test_cellos.wav",
+  "test_wobble.wav",
+  "test_eddy.wav",
+  "test_flo.wav",
+  "test_fred.wav",
+  "test_good.wav",
+  "test_grandma.wav",
+  "test_grandpa.wav",
+  "test_jester.wav",
+  "test_junior.wav",
+  "test_kathy.wav",
+  "test_organ.wav",
+  "test_superstar.wav",
+  "test_ralph.wav",
+  "test_reed.wav",
+  "test_rocko.wav",
+  "test_samantha.wav",
+  "test_sandy.wav",
+  "test_shelley.wav",
+  "test_trinoids.wav",
+  "test_whisper.wav",
+  "test_zarvox.wav",
 ]
+
+[[audio_samples]]
+class = "audio"
+directory = "samples"
+samples = [
+  "audio_albert.wav",
+  "audio_bad.wav",
+  "audio_bahh.wav",
+  "audio_bells.wav",
+  "audio_boing.wav",
+  "audio_bubbles.wav",
+  "audio_cellos.wav",
+  "audio_wobble.wav",
+  "audio_eddy.wav",
+  "audio_flo.wav",
+  "audio_fred.wav",
+  "audio_good.wav",
+  "audio_grandma.wav",
+  "audio_grandpa.wav",
+  "audio_jester.wav",
+  "audio_junior.wav",
+  "audio_kathy.wav",
+  "audio_organ.wav",
+  "audio_superstar.wav",
+  "audio_ralph.wav",
+  "audio_reed.wav",
+  "audio_rocko.wav",
+  "audio_samantha.wav",
+  "audio_sandy.wav",
+  "audio_shelley.wav",
+  "audio_trinoids.wav",
+  "audio_whisper.wav",
+  "audio_zarvox.wav",
+]
+

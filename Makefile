@@ -81,9 +81,10 @@ examples:
 	@echo "== Training =========================================================="
 	pipenv -q run train --config examples/train/config.toml $(temp_model)
 	@echo "== Analysis =========================================================="
-	pipenv -q run analyze --model $(temp_model) examples/analyze/papa_000.wav
-	pipenv -q run analyze --model $(temp_model) examples/analyze/maman_000.wav
-	pipenv -q run analyze --model $(temp_model) examples/analyze/taxi_000.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/python.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/library.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/test.wav
+	pipenv -q run analyze --model $(temp_model) examples/analyze/audio.wav
 .PHONY: examples
 
 ## Show this help.
