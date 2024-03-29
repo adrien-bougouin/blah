@@ -3,19 +3,7 @@ SHELL := bash
 .DEFAULT_GOAL :=help
 
 modules := blah blah-ptt
-system_dependencies := ffmpeg libsndfile portaudio
-
-## Setup the production environment.
-init:
-ifeq ($(shell command -v pipenv), "")
-	pip install pipenv --upgrade
-endif
-	@$(MAKE) deps
-.PHONY: init
-
-## Setup the development environment.
-dev-init: init dev-deps
-.PHONY: init
+system_dependencies := pyenv pipenv ffmpeg libsndfile portaudio
 
 ## Install production dependencies.
 deps:
@@ -36,7 +24,7 @@ find-%:
 	$(eval missing_dependencies ?= false)
 	@echo -n -e "Looking for \033[1m$*\033[0m..."
 	$(eval found := false)
-ifneq ($(shell command -v brew), "")
+ifneq (, $(shell command -v brew))
 	$(eval found := $(if $(shell brew list | grep $*), true, false))
 endif
 	@echo -e $(if $(shell echo $(found) | grep true), " \033[1;32mFound\033[0m", " \033[1;31mNot found\033[0m")
