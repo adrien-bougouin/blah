@@ -27,6 +27,36 @@ dev-deps:
 	pipenv sync --dev
 .PHONY: dev-deps
 
+## Verify system compatibilities.
+doctor: $(addprefix find-, $(system_dependencies))
+	@exit $(if $(shell echo $(missing_dependencies) | grep true), 1, 0)
+.PHONY: doctor
+
+find-%:
+	$(eval missing_dependencies ?= false)
+	@echo -n -e "Looking for \033[1m$*\033[0m..."
+	$(eval found := false)
+ifneq ($(shell command -v brew), "")
+	$(eval found := $(if $(shell brew list | grep $*), true, false))
+endif
+	@echo -e $(if $(shell echo $(found) | grep true), " \033[1;32mFound\033[0m", " \033[1;31mNot found\033[0m")
+	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
+.PHONY: find-%
+
+## Run examples.
+examples:
+	$(eval temp_directory := $(shell mktemp -d))
+	$(eval temp_model := $(temp_directory)/mode.bin)
+	@echo "== Training =========================================================="
+	pipenv -q run train --config examples/train/config.toml $(temp_model)
+	@echo "== Analysis =========================================================="
+	@$(MAKE) temp_model="$(temp_model)" $(foreach audio, $(wildcard examples/analyze/*.wav), example-analyze-$(notdir $(audio)))
+.PHONY: examples
+
+example-analyze-%:
+	pipenv -q run analyze --model $(temp_model) examples/analyze/$* | awk '{ print "$(basename $*) -> " $$0 }'
+.PHONY: example-analyze-%
+
 ## Run type checkers and style checkers.
 check: type-check style-check
 .PHONY: check
@@ -58,35 +88,6 @@ clean-venv:
 	pipenv --rm
 .PHONY: clean-venv
 
-## Verify system compatibilities.
-doctor: $(addprefix find-, $(system_dependencies))
-	@exit $(if $(shell echo $(missing_dependencies) | grep true), 1, 0)
-.PHONY: doctor
-
-find-%:
-	$(eval missing_dependencies ?= false)
-	@echo -n -e "Looking for \033[1m$*\033[0m..."
-	$(eval found := false)
-ifneq ($(shell command -v brew), "")
-	$(eval found := $(if $(shell brew list | grep $*), true, false))
-endif
-	@echo -e $(if $(shell echo $(found) | grep true), " \033[1;32mFound\033[0m", " \033[1;31mNot found\033[0m")
-	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
-.PHONY: find-%
-
-## Run examples.
-examples:
-	$(eval temp_directory := $(shell mktemp -d))
-	$(eval temp_model := $(temp_directory)/mode.bin)
-	@echo "== Training =========================================================="
-	pipenv -q run train --config examples/train/config.toml $(temp_model)
-	@echo "== Analysis =========================================================="
-	pipenv -q run analyze --model $(temp_model) examples/analyze/python.wav
-	pipenv -q run analyze --model $(temp_model) examples/analyze/library.wav
-	pipenv -q run analyze --model $(temp_model) examples/analyze/test.wav
-	pipenv -q run analyze --model $(temp_model) examples/analyze/audio.wav
-.PHONY: examples
-
 ## Show this help.
 help:
 	@echo "Usage: make [<target>]"
@@ -101,3 +102,7 @@ help:
 	@echo "Commands:"
 	@pipenv -q scripts | tail -n +3 | sed -E 's/^([^ ]+) +(.*)$$/  \x1b[1m\1\x1b[0m\n\tRun \`\2\` in virtual Python environment./'
 .PHONY: help
+
+%:
+	@echo -e "Error: No rule to make target \`$*\`.\n"
+	@$(MAKE) help
