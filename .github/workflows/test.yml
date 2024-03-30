@@ -10,18 +10,27 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
       with:
         python-version: "3.11.8"
-    - run: sudo apt update
-    - run: sudo apt install ffmpeg libsndfile1-dev portaudio19-dev
-    - run: pip install pipenv --upgrade
-    - run: make dev-deps
-    - run: make check
-    - run: make examples
+    - name: Install system dependencies
+      run: |
+        set -ex
+        sudo apt update
+        sudo apt install ffmpeg libsndfile1-dev portaudio19-dev
+        pip install pipenv --upgrade
+    - name: Install Python dependencies
+      run: make dev-deps
+    - name: Run type checker
+      run: make type-check
+    - name: Run linters
+      run: make style-check
+    - name: Verify examples
+      run: make examples
 
