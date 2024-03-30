@@ -1,9 +1,16 @@
 SHELL := bash
 
-.DEFAULT_GOAL :=help
+.DEFAULT_GOAL := help
 
 modules := blah blah-ptt
-system_dependencies := pyenv pipenv ffmpeg libsndfile portaudio
+system_program_dependencies := pyenv pipenv ffmpeg
+system_library_dependencies := ffmpeg libsndfile portaudio
+
+# Text display styles
+success_style	:= $(shell tput bold 2>&1; tput setaf 2 2>&1)
+failure_style := $(shell tput bold 2>&1; tput setaf 1 2>&1)
+bold_style := $(shell tput bold 2>&1)
+reset_style := $(shell tput sgr 0 2>&1)
 
 ## Install production dependencies.
 deps:
@@ -14,36 +21,6 @@ deps:
 dev-deps:
 	pipenv sync --dev
 .PHONY: dev-deps
-
-## Verify system compatibilities.
-doctor: $(addprefix find-, $(system_dependencies))
-	@exit $(if $(shell echo $(missing_dependencies) | grep true), 1, 0)
-.PHONY: doctor
-
-find-%:
-	$(eval missing_dependencies ?= false)
-	@echo -n -e "Looking for \033[1m$*\033[0m..."
-	$(eval found := false)
-ifneq (, $(shell command -v brew))
-	$(eval found := $(if $(shell brew list | grep $*), true, false))
-endif
-	@echo -e $(if $(shell echo $(found) | grep true), " \033[1;32mFound\033[0m", " \033[1;31mNot found\033[0m")
-	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
-.PHONY: find-%
-
-## Run examples.
-examples:
-	$(eval temp_directory := $(shell mktemp -d))
-	$(eval temp_model := $(temp_directory)/mode.bin)
-	@echo "== Training =========================================================="
-	pipenv -q run train --config examples/train/config.toml $(temp_model)
-	@echo "== Analysis =========================================================="
-	@$(MAKE) temp_model="$(temp_model)" $(foreach audio, $(wildcard examples/analyze/*.wav), example-analyze-$(notdir $(audio)))
-.PHONY: examples
-
-example-analyze-%:
-	pipenv -q run analyze --model $(temp_model) examples/analyze/$* | awk '{ print "$(basename $*) -> " $$0 }'
-.PHONY: example-analyze-%
 
 ## Run type checkers and style checkers.
 check: type-check style-check
@@ -65,7 +42,7 @@ clean:
 	rm -rf $(addsuffix /__pycache__, $(modules))
 	rm -rf $(addsuffix /**/__pycache__, $(modules))
 	rm -rf .mypy_cache
-	@read -p $$'\033[1mRemove virtual Python environment too?\033[0m (y/N) ' confirm; \
+	@read -p $$'$(bold_style)Remove virtual Python environment too?$(reset_style) (y/N) ' confirm; \
 		if [[ $${confirm} == y ]]; then \
 			$(MAKE) clean-venv; \
 		fi
@@ -76,19 +53,57 @@ clean-venv:
 	pipenv --rm
 .PHONY: clean-venv
 
+## Run examples.
+examples:
+	$(eval temp_directory := $(shell mktemp -d))
+	$(eval temp_model := $(temp_directory)/mode.bin)
+	@echo "== Training =========================================================="
+	pipenv -q run train --config examples/train/config.toml $(temp_model)
+	@echo "== Analysis =========================================================="
+	@$(MAKE) temp_model="$(temp_model)" $(foreach audio, $(wildcard examples/analyze/*.wav), example-analyze-$(notdir $(audio)))
+.PHONY: examples
+
+example-analyze-%:
+	pipenv -q run analyze --model $(temp_model) examples/analyze/$* | awk '{ print "$(basename $*) -> " $$0 }'
+.PHONY: example-analyze-%
+
+## Verify system compatibilities.
+doctor: $(addprefix find-program-, $(system_program_dependencies)) $(addprefix find-library-, $(system_library_dependencies))
+	@exit $(if $(shell echo $(missing_dependencies) | grep true), 1, 0)
+.PHONY: doctor
+
+find-program-%:
+	$(eval missing_dependencies ?= false)
+	@echo -n -e "Looking for $(bold_style)$*$(reset_style)..."
+	$(eval found := $(if $(shell command -v $*), true, false))
+	@echo -e $(if $(shell echo $(found) | grep true), " $(success_style)Found$(reset_style)", " $(failure_style)Not found$(reset_style)")
+	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
+.PHONY: find-program-%
+
+find-library-%:
+	$(eval missing_dependencies ?= false)
+	@echo -n -e "Looking for $(bold_style)$*$(reset_style)..."
+	$(eval found := false)
+ifneq (, $(shell command -v brew))
+	$(eval found := $(if $(shell brew list | grep $*), true, false))
+endif
+	@echo -e $(if $(shell echo $(found) | grep true), " $(success_style)Found$(reset_style)", " $(failure_style)Not found$(reset_style)")
+	$(eval missing_dependencies += $(if $(shell echo $(found) | grep true), false, true))
+.PHONY: find-library-%
+
 ## Show this help.
 help:
 	@echo "Usage: make [<target>]"
 	@echo "       pipenv run <command> [<command_args>]"
 	@echo
-	@echo "Targets:"
+	@echo "Make targets:"
 	@grep -zo "^\(## .*\n\)\+[^:]*:" $(MAKEFILE_LIST) \
 		| tr '\n' ':' | sed -E 's/:+$$/\n/' | sed 's/::##/\n##/g' \
-		| sed -E 's/^(.*):([^:]+)$$/  \x1b[1m\2\x1b[0m\1/' \
+		| sed -E 's/^(.*):([^:]+)$$/  $(bold_style)\2$(reset_style)\1/' \
 		| sed -E 's/:?## /\n\t/g'
 	@echo
-	@echo "Commands:"
-	@pipenv -q scripts | tail -n +3 | sed -E 's/^([^ ]+) +(.*)$$/  \x1b[1m\1\x1b[0m\n\tRun \`\2\` in virtual Python environment./'
+	@echo "Pipenv commands:"
+	@pipenv -q scripts | tail -n +3 | sed -E 's/^([^ ]+) +(.*)$$/  $(bold_style)\1$(reset_style)\n\tRun \`\2\` in virtual Python environment./'
 .PHONY: help
 
 %:
