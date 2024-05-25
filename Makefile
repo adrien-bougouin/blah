@@ -1,8 +1,8 @@
-SHELL := bash
-
 .DEFAULT_GOAL := help
 
-modules := blah blah-ptt
+SHELL := /usr/bin/env bash
+
+modules := blah blah_ptt
 system_program_dependencies := pyenv pipenv ffmpeg
 system_library_dependencies := ffmpeg libsndfile portaudio
 
@@ -23,19 +23,19 @@ dev-deps:
 .PHONY: dev-deps
 
 ## Run type checkers and style checkers.
-check: type-check style-check
+check: style-check type-check
 .PHONY: check
-
-## Run type checkers.
-type-check:
-	pipenv -q run mypy $(modules)
-.PHONY: type-check
 
 ## Run style checkers.
 style-check:
 	pipenv -q run pylint $(modules) --score n
 	pipenv -q run flake8 $(modules)
 .PHONY: style-check
+
+## Run type checkers.
+type-check:
+	pipenv -q run mypy $(modules)
+.PHONY: type-check
 
 ## Remove generated files.
 clean:

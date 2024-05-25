@@ -4,4 +4,4 @@ import numpy
 import numpy.typing
 
 AudioData: TypeAlias = numpy.typing.NDArray[numpy.float32]
-AudioSampleRate: TypeAlias = float
+AudioSampleRate: TypeAlias = int

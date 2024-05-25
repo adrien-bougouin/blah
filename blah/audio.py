@@ -9,11 +9,13 @@ from blah.typing.audio import AudioData, AudioSampleRate
 
 
 class Audio:
+    DEFAULT_SAMPLE_RATE: AudioSampleRate = 22050
+
     @classmethod
     def from_file(cls: Type[Audio], filepath: Filepath) -> Audio:
-        data, sample_rate = librosa.load(filepath)
+        data, _ = librosa.load(filepath, sr=cls.DEFAULT_SAMPLE_RATE)
 
-        return cls(data, sample_rate)
+        return cls(data, cls.DEFAULT_SAMPLE_RATE)
 
     def __init__(self, data: AudioData, sample_rate: AudioSampleRate) -> None:
         self.data = data

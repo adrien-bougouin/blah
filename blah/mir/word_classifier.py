@@ -13,7 +13,7 @@ from . import speech
 class WordClassifier:
     def __init__(
         self,
-        sample_rate: AudioSampleRate = 22050,
+        sample_rate: AudioSampleRate = Audio.DEFAULT_SAMPLE_RATE,
         svm: Optional[sklearn.svm.LinearSVC] = None,
         embedding_dimensions: Optional[list[SpeechFeatures]] = None,
     ) -> None:
