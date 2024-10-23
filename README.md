@@ -11,4 +11,4 @@ Simple single-word speech recognizer
 
 ## Examples
 
-See `./examples` and run `make examples` for more.
+See `./examples` and run `make examples` for more. Look at `examples/train/config.toml` for an example configuration for the model training.
